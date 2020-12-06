@@ -1,0 +1,6 @@
+
+/* Class = "UITextField"; placeholder = "City"; ObjectID = "4lF-Fo-DRT"; */
+"4lF-Fo-DRT.placeholder" = "Город";
+
+/* Class = "UIButton"; normalTitle = "Get"; ObjectID = "Qce-43-9Jw"; */
+"Qce-43-9Jw.normalTitle" = "Получить";
