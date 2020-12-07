@@ -90,3 +90,8 @@ fastlane/test_output
 iOSInjectionProject/
 /Weather.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 /Weather.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+/Pods
+/Podfile
+/Podfile.lock
+/Weather.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+/Weather.xcworkspace/contents.xcworkspacedata
