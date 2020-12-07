@@ -18,10 +18,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // bug
+        let button = UIButton(type: .roundedRect)
+        button.frame = CGRect(x: 20, y: 50, width: 100, height: 30)
+        button.setTitle("Crash", for: [])
+        button.addTarget(self, action: #selector(self.crashButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(button)
+        //
+        
         self.setapLocationManager()
     }
     
     // MARK: - IBActions
+    @IBAction func crashButtonTapped(_ sender: AnyObject) {
+        fatalError()
+    }
+    
     @IBAction func getButtonPressed(_ sender: UIButton) {
         self.sendRequest { (weather) in
             DispatchQueue.main.async {
