@@ -29,6 +29,11 @@ class ViewController: UIViewController {
         self.setapLocationManager()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setup()
+    }
+    
     // MARK: - IBActions
     @IBAction func crashButtonTapped(_ sender: AnyObject) {
         fatalError()
@@ -134,6 +139,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ViewController: CLLocationManagerDelegate {
+    
+    func setup() {
+        self.cityTF.layer.cornerRadius = 10
+        self.cityTF.layer.borderWidth = 1.0
+        self.cityTF.layer.borderColor = UIColor.gray.cgColor
+                
+        let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        imageView.alpha = 0.5
+        self.cityTF.leftViewMode = .always
+        self.cityTF.leftView = imageView
+        
+        self.getButton.layer.cornerRadius = 10
+    }
     
     func setapLocationManager() {
         locationManager.delegate = self

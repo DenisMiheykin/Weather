@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>696384638419-jnud3g07k8f3k51gel19qq02fjph7ku8.apps.googleusercontent.com</string>
+	<string>421604342057-qr0ftsri3urk68othl699hljh6406ec9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.696384638419-jnud3g07k8f3k51gel19qq02fjph7ku8</string>
+	<string>com.googleusercontent.apps.421604342057-qr0ftsri3urk68othl699hljh6406ec9</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDqoHUNEqQ3AJardu_ewenPjt3BOp1Pajo</string>
+	<string>AIzaSyA0sV1OZrznRNm4CVJiAuS1dFVjZY4Dmtk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>696384638419</string>
+	<string>421604342057</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.denisMikheykin.Weather</string>
 	<key>PROJECT_ID</key>
-	<string>race2d-91190</string>
+	<string>weather-45cd0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>race2d-91190.appspot.com</string>
+	<string>weather-45cd0.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:696384638419:ios:0370032cb1cf524b3a3326</string>
+	<string>1:421604342057:ios:3b54d44f2695d0143d9f38</string>
 </dict>
 </plist>

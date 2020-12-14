@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A0029379256EF2E0009FF800 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A002937B256EF2E0009FF800 /* Localizable.strings */; };
 		A0029380256EF528009FF800 /* ExtensionString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002937F256EF528009FF800 /* ExtensionString.swift */; };
+		A04AA54D25817A61004E70CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A04AA54C25817A61004E70CF /* GoogleService-Info.plist */; };
 		A067606925658AB30019A442 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A067606825658AB30019A442 /* AppDelegate.swift */; };
 		A067606D25658AB30019A442 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A067606C25658AB30019A442 /* ViewController.swift */; };
 		A067607025658AB30019A442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A067606E25658AB30019A442 /* Main.storyboard */; };
@@ -18,7 +19,6 @@
 		A067607F2565A9300019A442 /* JsonParseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A067607E2565A9300019A442 /* JsonParseManager.swift */; };
 		A06760822565C5A70019A442 /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06760812565C5A70019A442 /* CustomTableViewCell.swift */; };
 		A071C727256AA0B9005661CD /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = A071C726256AA0B9005661CD /* Weather.swift */; };
-		A0A892E5257EABC100344AC0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A0A892E4257EABC100344AC0 /* GoogleService-Info.plist */; };
 		B970BEFFDA40854CFBD02146 /* Pods_Weather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A8D892CDB2E45FB20AFAFD /* Pods_Weather.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +30,7 @@
 		A002937D256EF301009FF800 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A002937E256EF301009FF800 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A002937F256EF528009FF800 /* ExtensionString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionString.swift; sourceTree = "<group>"; };
+		A04AA54C25817A61004E70CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A067606525658AB30019A442 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A067606825658AB30019A442 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A067606C25658AB30019A442 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,7 +42,6 @@
 		A067607E2565A9300019A442 /* JsonParseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonParseManager.swift; sourceTree = "<group>"; };
 		A06760812565C5A70019A442 /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		A071C726256AA0B9005661CD /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
-		A0A892E4257EABC100344AC0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F12BAEE5757DF75041D3F913 /* Pods-Weather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather.release.xcconfig"; path = "Target Support Files/Pods-Weather/Pods-Weather.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,7 +98,7 @@
 				A067607325658AB40019A442 /* LaunchScreen.storyboard */,
 				A002937B256EF2E0009FF800 /* Localizable.strings */,
 				A067607625658AB40019A442 /* Info.plist */,
-				A0A892E4257EABC100344AC0 /* GoogleService-Info.plist */,
+				A04AA54C25817A61004E70CF /* GoogleService-Info.plist */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -184,7 +184,7 @@
 			files = (
 				A067607525658AB40019A442 /* LaunchScreen.storyboard in Resources */,
 				A0029379256EF2E0009FF800 /* Localizable.strings in Resources */,
-				A0A892E5257EABC100344AC0 /* GoogleService-Info.plist in Resources */,
+				A04AA54D25817A61004E70CF /* GoogleService-Info.plist in Resources */,
 				A067607225658AB40019A442 /* Assets.xcassets in Resources */,
 				A067607025658AB30019A442 /* Main.storyboard in Resources */,
 			);
@@ -227,7 +227,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		E99EABAFC6AEE1A056514E99 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

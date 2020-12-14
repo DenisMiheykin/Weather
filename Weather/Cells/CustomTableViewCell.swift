@@ -7,7 +7,7 @@ class CustomTableViewCell: UITableViewCell {
     @IBOutlet weak var tempLable: UILabel!
     @IBOutlet weak var humidityLable: UILabel!
     @IBOutlet weak var speedLable: UILabel!
-    @IBOutlet weak var imageViewBackground: UIImageView!
+    @IBOutlet weak var iconImageView: UIImageView!
     
     // MARK: - lifecycle funcs
     override func awakeFromNib() {
@@ -18,7 +18,7 @@ class CustomTableViewCell: UITableViewCell {
     // MARK: - flow funcs
     func configure(with weather: WeatherData) {
         if let date = weather.date {
-            self.dayLable.text = WeatherData.getDay(from: date).localized
+            self.dayLable.text = WeatherData.getDay(from: date).localized.capitalizingFirstLetter()
         }
         if let temp = weather.temperature {
             self.tempLable.text = "\(temp) \u{00B0}C"
@@ -30,7 +30,17 @@ class CustomTableViewCell: UITableViewCell {
             self.speedLable.text = "\(speedWind) \("mps".localized)"
         }
         if let image = weather.image {
-            self.imageViewBackground.image = UIImage(named: image)
+            self.iconImageView.image = UIImage(named: image)
         }
+    }
+}
+
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).capitalized + dropFirst()
+    }
+
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
     }
 }
