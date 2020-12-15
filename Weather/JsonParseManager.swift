@@ -20,12 +20,45 @@ class JsonParseManager {
     func getWeather(from dictionary: [String: Any]) -> Weather {
         
         let weather = Weather()
+        weather.hourly = [WeatherHourly]()
         weather.data = [WeatherData]()
         
         if let timezone = dictionary["timezone"] as? String {
             weather.city = timezone
         }
         
+        self.getHourly(weather, dictionary)
+        self.getDaily(weather, dictionary)
+        
+        return weather
+    }
+    
+    func getHourly(_ weather: Weather, _ dictionary: [String: Any]) {
+        if let list = dictionary["hourly"] as? [[String: Any]] {
+            for item in list {
+                
+                let weatherHourly = WeatherHourly()
+                
+                if let date = item["dt"] as? TimeInterval {
+                    weatherHourly.date = date
+                }
+                
+                if let temp = item["temp"] as? Double {
+                    weatherHourly.temp = Int(round(temp))
+                }
+                
+                if let weather = item["weather"] as? [Any],
+                    let object = weather.first as? [String: Any],
+                    let icon = object["icon"] as? String {
+                    weatherHourly.image = icon
+                }
+                
+                weather.hourly?.append(weatherHourly)
+            }
+        }
+    }
+    
+    func getDaily(_ weather: Weather, _ dictionary: [String: Any]) {
         if let list = dictionary["daily"] as? [[String: Any]] {
             for item in list {
                 
@@ -70,8 +103,6 @@ class JsonParseManager {
                 weather.data?.append(weatherData)
             }
         }
-        
-        return weather
     }
     
     func getCoordinates(_ data: Data) -> (Double, Double) {
@@ -97,60 +128,5 @@ class JsonParseManager {
         }
         
         return coordinates
-    }
-    
-    private func getWeather_old(from dictionary: [String: Any]) -> Weather {
-        
-        let weather = Weather()
-        weather.data = [WeatherData]()
-        
-        if let city = dictionary["city"] as? [String: Any],
-            let name = city["name"] as? String {
-            weather.city = name
-        }
-        
-        if let list = dictionary["list"] as? [[String: Any]] {
-            for item in list {
-                
-                let weatherData = WeatherData()
-                
-                if let date = item["dt"] as? TimeInterval {
-                    weatherData.date = date
-                }
-                
-                if let main = item["main"] as? [String: Any] {
-                    if let temperature = main["temp"] as? Double {
-                        weatherData.temperature = Int(round(temperature))
-                    }
-                    if let humidity = main["humidity"] as? Double {
-                        weatherData.humidity = Int(round(humidity))
-                    }
-                }
-                
-                if let wind = item["wind"] as? [String: Any] {
-                    if let speed = wind["speed"] as? Double {
-                        weatherData.speedWind = Int(round(speed))
-                    }
-                }
-                
-                if let clouds = item["clouds"] as? [String: Any] {
-                    if let all = clouds["all"] as? Int {
-                        weatherData.clouds = all
-                    }
-                }
-                
-                if let rain = item["rain"] as? Double {
-                    weatherData.rain = rain
-                }
-                
-                if let snow = item["snow"] as? Double {
-                    weatherData.snow = snow
-                }
-                
-                weather.data?.append(weatherData)
-            }
-        }
-        
-        return weather
     }
 }

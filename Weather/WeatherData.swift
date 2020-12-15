@@ -11,13 +11,18 @@ class WeatherData: Decodable {
     var image: String? = nil
     
     static func getDay(from date: TimeInterval) -> String {
-        
-//        print(date)
+        return self.getFormatDate(from: date, dateFormat: "EEEE")
+    }
+    
+    static func getHour(from date: TimeInterval) -> String {
+        return self.getFormatDate(from: date, dateFormat: "HH")
+    }
+    
+    private static func getFormatDate(from date: TimeInterval, dateFormat: String) -> String {
         let nsDate = NSDate(timeIntervalSince1970: date) as Date
-//        print(nsDate)
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
+        formatter.dateFormat = dateFormat
         return formatter.string(from: nsDate)
     }
 }

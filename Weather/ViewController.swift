@@ -5,6 +5,7 @@ class ViewController: UIViewController {
 
     // MARK: - outlets
     @IBOutlet weak var cityTF: UITextField!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var getButton: UIButton!
     
@@ -18,14 +19,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // bug
-        let button = UIButton(type: .roundedRect)
-        button.frame = CGRect(x: 20, y: 50, width: 100, height: 30)
-        button.setTitle("Crash", for: [])
-        button.addTarget(self, action: #selector(self.crashButtonTapped(_:)), for: .touchUpInside)
-        view.addSubview(button)
-        //
-        
         self.setapLocationManager()
     }
     
@@ -35,10 +28,6 @@ class ViewController: UIViewController {
     }
     
     // MARK: - IBActions
-    @IBAction func crashButtonTapped(_ sender: AnyObject) {
-        fatalError()
-    }
-    
     @IBAction func getButtonPressed(_ sender: UIButton) {
         self.sendRequest { (weather) in
             DispatchQueue.main.async {
@@ -81,7 +70,7 @@ class ViewController: UIViewController {
         
         let appid = "16adcfd37a1c8c0311e556b7f1077f8d"
         let baseURL = "https://api.openweathermap.org"
-        let endPoint = "/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&exclude=minutely,hourly,current&units=metric&cnt=7&appid=\(appid)"
+        let endPoint = "/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&exclude=minutely,current&units=metric&cnt=7&appid=\(appid)"
         
         let urlString = "\(baseURL)\(endPoint)"
         
@@ -108,6 +97,7 @@ class ViewController: UIViewController {
     func showWeather(_ weather: Weather) {
         self.weather = weather
         self.cityTF.text = weather.city
+        self.collectionView.reloadData()
         self.tableView.reloadData()
     }
     
@@ -138,13 +128,35 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return weather.hourly?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as? CustomCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        if let weatherHourly = self.weather.hourly, weatherHourly.count > 0 {
+            cell.configure(with: weatherHourly[indexPath.item])
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 15
+    }
+}
+
 extension ViewController: CLLocationManagerDelegate {
     
     func setup() {
         self.cityTF.layer.cornerRadius = 10
         self.cityTF.layer.borderWidth = 1.0
         self.cityTF.layer.borderColor = UIColor.gray.cgColor
-                
+        
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         imageView.alpha = 0.5
         self.cityTF.leftViewMode = .always

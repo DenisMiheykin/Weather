@@ -21,7 +21,7 @@ class CustomTableViewCell: UITableViewCell {
             self.dayLable.text = WeatherData.getDay(from: date).localized.capitalizingFirstLetter()
         }
         if let temp = weather.temperature {
-            self.tempLable.text = "\(temp) \u{00B0}C"
+            self.tempLable.text = "\(temp)\u{00B0}"
         }
         if let humidity = weather.humidity {
             self.humidityLable.text = "\(humidity) %"
