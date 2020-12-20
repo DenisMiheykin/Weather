@@ -13,12 +13,12 @@ class ViewController: UIViewController {
     private let locationManager = CLLocationManager()
     
     // MARK: - var
-    var weather = Weather()
+    var viewModel = ViewModel()
     
     // MARK: - lifecycle funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.bindUI()
         self.setapLocationManager()
     }
     
@@ -29,76 +29,22 @@ class ViewController: UIViewController {
     
     // MARK: - IBActions
     @IBAction func getButtonPressed(_ sender: UIButton) {
-        self.sendRequest { (weather) in
-            DispatchQueue.main.async {
-                self.showWeather(weather)
-            }
-        }
+        viewModel.getWeather()
     }
     
     // MARK: - flow funcs
-    func sendRequest(completion: @escaping (Weather) -> ()) {
-        guard let text = self.cityTF.text,
-            let city = text.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed) else {
-            return
+    func bindUI() {
+        viewModel.city.bind { (value) in self.cityTF.text = value }
+        
+        viewModel.weather.bind { [weak self] (value) in
+            self?.collectionView.reloadData()
         }
-        
-        if city.isEmpty {
-            return
-        }
-        
-        let baseURL = "http://api.openweathermap.org"
-        let endPoint = "/data/2.5/forecast?q=\(city)&cnt=1&appid=16adcfd37a1c8c0311e556b7f1077f8d"
-        
-        guard let url = URL(string: "\(baseURL)\(endPoint)") else {
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if error == nil, let data = data {
-                let coor = JsonParseManager.shared.getCoordinates(data)
-                self.sendRequest(byСoordinates: coor.0, longitude: coor.1, completion: completion)
+
+        viewModel.reloadTableView = { [weak self] () in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
             }
         }
-        task.resume()
-    }
-    
-    func sendRequest(byСoordinates latitude: CLLocationDegrees, longitude: CLLocationDegrees, completion: @escaping (Weather) -> ()) {
-        
-        let appid = "16adcfd37a1c8c0311e556b7f1077f8d"
-        let baseURL = "https://api.openweathermap.org"
-        let endPoint = "/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&exclude=minutely,current&units=metric&cnt=7&appid=\(appid)"
-        
-        let urlString = "\(baseURL)\(endPoint)"
-        
-        self.sendRequestByURL(byURL: urlString, completion: completion)
-    }
-    
-    func sendRequestByURL(byURL value: String, completion: @escaping (Weather) -> ()) {
-        guard let url = URL(string: value) else {
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if error == nil, let data = data {
-                let weather = JsonParseManager.shared.JsonParse(data)
-                completion(weather)
-            }
-        }
-        task.resume()
-    }
-    
-    func showWeather(_ weather: Weather) {
-        self.weather = weather
-        self.cityTF.text = weather.city
-        self.collectionView.reloadData()
-        self.tableView.reloadData()
     }
     
 }
@@ -113,13 +59,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell") as? CustomTableViewCell else {
             return UITableViewCell()
         }
-        
-        if let weatherData = self.weather.data {
+
+        if let weatherData = viewModel.weather.value.data {
             if weatherData.count > 0  {
                 cell.configure(with: weatherData[indexPath.row])
             }
         }
-        
+
         return cell
     }
     
@@ -130,18 +76,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return weather.hourly?.count ?? 0
+        return viewModel.weather.value.hourly?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as? CustomCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
-        if let weatherHourly = self.weather.hourly, weatherHourly.count > 0 {
+
+        if let weatherHourly = viewModel.weather.value.hourly, weatherHourly.count > 0 {
             cell.configure(with: weatherHourly[indexPath.item])
         }
-        
+
         return cell
     }
     
@@ -177,11 +123,7 @@ extension ViewController: CLLocationManagerDelegate {
         print("locations = \(location.latitude) \(location.longitude)")
         locationManager.stopUpdatingLocation()
         
-        self.sendRequest(byСoordinates: location.latitude, longitude: location.longitude) { (weather) in
-            DispatchQueue.main.async {
-                self.showWeather(weather)
-            }
-        }
+        viewModel.sendRequest(byСoordinates: location.latitude, longitude: location.longitude)
     }
     
 }
