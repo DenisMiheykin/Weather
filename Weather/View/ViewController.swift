@@ -29,12 +29,18 @@ class ViewController: UIViewController {
     
     // MARK: - IBActions
     @IBAction func getButtonPressed(_ sender: UIButton) {
-        viewModel.getWeather()
+        guard let city = self.cityTF.text else {
+            return
+        }
+        viewModel.getWeather(for: city)
     }
     
     // MARK: - flow funcs
     func bindUI() {
-        viewModel.city.bind { (value) in self.cityTF.text = value }
+        viewModel.city.bind { [weak self] (value) in
+            self?.cityTF.text = value
+            print(value)
+        }
         
         viewModel.weather.bind { [weak self] (value) in
             self?.collectionView.reloadData()
@@ -46,7 +52,6 @@ class ViewController: UIViewController {
             }
         }
     }
-    
 }
 
 // MARK: - extension
@@ -96,8 +101,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
 }
 
-extension ViewController: CLLocationManagerDelegate {
-    
+extension ViewController {
     func setup() {
         self.cityTF.layer.cornerRadius = 10
         self.cityTF.layer.borderWidth = 1.0
@@ -110,7 +114,9 @@ extension ViewController: CLLocationManagerDelegate {
         
         self.getButton.layer.cornerRadius = 10
     }
-    
+}
+
+extension ViewController: CLLocationManagerDelegate {
     func setapLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -125,5 +131,4 @@ extension ViewController: CLLocationManagerDelegate {
         
         viewModel.sendRequest(byСoordinates: location.latitude, longitude: location.longitude)
     }
-    
 }
