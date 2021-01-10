@@ -11,7 +11,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
             self.hourlyLable.text = WeatherData.getHour(from: date)
         }
         if let temp = weather.temp {
-            self.tempLable.text = "\(temp)\u{00B0}"
+            self.tempLable.text = "\(temp)\(Constants.degreesSymbol)"
         }
         if let image = weather.image {
             self.imageView.image = UIImage(named: image)

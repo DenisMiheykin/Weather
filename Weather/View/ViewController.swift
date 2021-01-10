@@ -4,16 +4,21 @@ import CoreLocation
 class ViewController: UIViewController {
 
     // MARK: - outlets
-    @IBOutlet weak var cityTF: UITextField!
+    @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var getButton: UIButton!
+    @IBOutlet weak var backImageView: UIImageView!
+    @IBOutlet weak var cityLabel: UILabel!
+    @IBOutlet weak var currentTempLabel: UILabel!
+    @IBOutlet weak var currentImageView: UIImageView!
     
     // MARK: - let
     private let locationManager = CLLocationManager()
     
     // MARK: - var
     var viewModel = ViewModel()
+    var weather = Weather()
     
     // MARK: - lifecycle funcs
     override func viewDidLoad() {
@@ -29,26 +34,35 @@ class ViewController: UIViewController {
     
     // MARK: - IBActions
     @IBAction func getButtonPressed(_ sender: UIButton) {
-        guard let city = self.cityTF.text else {
+        guard let city = self.cityTextField.text else {
             return
         }
-        viewModel.getWeather(for: city)
+        
+        if city.isEmpty {
+            self.showAlertWhenCityIsEmpty()
+            return
+        }
+        
+        viewModel.getWeather(for: city, alert: { self.showAlertWhenCityIsEmpty() })
     }
     
     // MARK: - flow funcs
     func bindUI() {
-        viewModel.city.bind { [weak self] (value) in
-            self?.cityTF.text = value
-            print(value)
+        viewModel.weather.bind { [weak self] (weather) in
+            self?.weather = weather
+            let image = weather.hourly?.first?.image ?? ""
+            self?.backImageView.image = UIImage(named: "back\(image)")
+            self?.cityLabel.text = weather.city
+            self?.currentTempLabel.text = "\(weather.hourly?.first?.temp ?? 0)\(Constants.degreesSymbol)"
+            self?.currentImageView.image = UIImage(named: image)
+            
+            self?.collectionView.reloadData()
+            self?.tableView.reloadData()
         }
         
-        viewModel.weather.bind { [weak self] (value) in
-            self?.collectionView.reloadData()
-        }
-
-        viewModel.reloadTableView = { [weak self] () in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+        viewModel.error.bind { [weak self] (error) in
+            if let error = error {
+                self?.showAlert(title: "Error!", message: error, handler: nil)
             }
         }
     }
@@ -57,7 +71,7 @@ class ViewController: UIViewController {
 // MARK: - extension
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return Constants.numberOfDaysInWeek
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,7 +79,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
 
-        if let weatherData = viewModel.weather.value.data {
+        if let weatherData = weather.data {
             if weatherData.count > 0  {
                 cell.configure(with: weatherData[indexPath.row])
             }
@@ -81,7 +95,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.weather.value.hourly?.count ?? 0
+        return weather.hourly?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -89,7 +103,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
             return UICollectionViewCell()
         }
 
-        if let weatherHourly = viewModel.weather.value.hourly, weatherHourly.count > 0 {
+        if let weatherHourly = weather.hourly, weatherHourly.count > 0 {
             cell.configure(with: weatherHourly[indexPath.item])
         }
 
@@ -103,14 +117,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
 extension ViewController {
     func setup() {
-        self.cityTF.layer.cornerRadius = 10
-        self.cityTF.layer.borderWidth = 1.0
-        self.cityTF.layer.borderColor = UIColor.gray.cgColor
+        self.cityTextField.layer.cornerRadius = 10
+        self.cityTextField.layer.borderWidth = 1.0
+        self.cityTextField.layer.borderColor = UIColor.gray.cgColor
         
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         imageView.alpha = 0.5
-        self.cityTF.leftViewMode = .always
-        self.cityTF.leftView = imageView
+        self.cityTextField.leftViewMode = .always
+        self.cityTextField.leftView = imageView
         
         self.getButton.layer.cornerRadius = 10
     }
@@ -126,7 +140,6 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location: CLLocationCoordinate2D = manager.location!.coordinate
-        print("locations = \(location.latitude) \(location.longitude)")
         locationManager.stopUpdatingLocation()
         
         viewModel.sendRequest(byСoordinates: location.latitude, longitude: location.longitude)

@@ -5,7 +5,7 @@ class JsonParseManager {
     static let shared = JsonParseManager()
     private init(){}
     
-    func JsonParse(_ data: Data) -> Weather {
+    func jsonParse(_ data: Data) -> Weather {
         do {
             if let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 return self.getWeather(from: dictionary)
@@ -24,7 +24,7 @@ class JsonParseManager {
         weather.data = [WeatherData]()
         
         if let timezone = dictionary["timezone"] as? String {
-            weather.city = timezone
+            weather.city = self.getCityFromString(timezone)
         }
         
         self.getHourly(weather, dictionary)
@@ -105,28 +105,46 @@ class JsonParseManager {
         }
     }
     
-    func getCoordinates(_ data: Data) -> (Double, Double) {
-        var coordinates = (0.0, 0.0)
+    func getCoordinates(_ data: Data) -> (error: String?, latitude: Double, longitude: Double) {
+        var result: (error: String?, latitude: Double, longitude: Double) = (nil, 0.0, 0.0)
         do {
             if let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 
-                if let city = dictionary["city"] as? [String: Any],
-                    let coord = city["coord"] as? [String: Any] {
-                    if let lat = coord["lat"] as? Double {
-                        coordinates.0 = lat
+                guard let city = dictionary["city"] as? [String: Any] else {
+                    if let message = dictionary["message"] as? String {
+                        result.error = message
+                    } else {
+                        result.error = "Data not found."
+                    }
+                    return result
+                }
+                
+                if let coord = city["coord"] as? [String: Any] {
+                    if let latitude = coord["lat"] as? Double {
+                        result.latitude = latitude
                     }
                     
-                    if let lon = coord["lon"] as? Double {
-                        coordinates.1 = lon
+                    if let longitude = coord["lon"] as? Double {
+                        result.longitude = longitude
                     }
                 }
                 
-                return coordinates
+                return result
             }
         } catch {
             print(error)
         }
         
-        return coordinates
+        return result
+    }
+    
+    func getCityFromString(_ value: String) -> String {
+        guard let start = value.firstIndex(of: "/") else {
+            return ""
+        }
+        
+        let range = value.index(after: start)..<value.endIndex
+        
+        return String(value[range])
     }
 }
