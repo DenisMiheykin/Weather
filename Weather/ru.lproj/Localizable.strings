@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  Weather
+
+  Created by Denis Mikheykin on 11/25/20.
+  Copyright © 2020 Denis Mikheykin. All rights reserved.
+*/
+
+"mps" = "м/с";
+"Monday" = "Понедельник";
+"Tuesday" = "Вторник";
+"Wednesday" = "Среда";
+"Thursday" = "Четверг";
+"Friday" = "Пятница";
+"Saturday" = "Суббота";
+"Sunday" = "Воскресеньe";
